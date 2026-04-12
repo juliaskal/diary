@@ -1,5 +1,5 @@
 from utils import prosess_created_at
-from models import Post, Folder
+from models import Post, Folder, PostRequest
 from db import GenericRepository, PostRepository
 
 
@@ -13,34 +13,29 @@ class PostService:
         self.post_repository = post_repository
         self.folder_repository = folder_repository
 
-    def create_post(self, form_data: dict) -> str:
-        folder = self.folder_repository.find(id=form_data.get("folder"))
+    def create_post(self, post_request: PostRequest) -> str:
+        folder = self.folder_repository.find(id=post_request.folder)
+
+        post = Post.from_request(
+            post_request=post_request,
+            folder=folder
+        )
+        post_id = self.post_repository.add(post)
+
+        return str(post_id)
+
+    def update_post(self, post_request: PostRequest) -> str:
+        folder = self.folder_repository.find(id=post_request.folder)
 
         post_data = {
-            "title": form_data.get("title"),
-            "created_at": prosess_created_at(form_data.get("created_at")),
-            "content_html": form_data.get("content_html"),
-            "folder": folder
-        }
-
-        post = Post(**post_data)
-        result = self.post_repository.add(post)
-
-        return str(result)
-
-    def update_post(self, form_data: dict) -> str:
-        post_id = form_data["id"]
-        folder = self.folder_repository.find(id=form_data.get("folder"))
-
-        post_data = {
-            "title": form_data["title"],
-            "created_at": prosess_created_at(form_data["created_at"]),
-            "content_html": form_data["content_html"],
+            "title": post_request.title,
+            "created_at": post_request.created_at,
+            "content_html": post_request.content_html,
             "folder": folder.model_dump() if folder else folder
         }
-        self.post_repository.update(post_data, id=post_id)
+        self.post_repository.update(post_data, id=post_request.id)
 
-        return post_id
+        return post_request.id
 
     def get_post_by_id(self, post_id: str) -> Post:
         return self.post_repository.get(id=post_id)

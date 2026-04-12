@@ -1,4 +1,3 @@
-from utils import prosess_created_at
 from models import Folder
 from db import GenericRepository, PostRepository
 
@@ -31,32 +30,14 @@ class FolderService:
 
         return deleted_folders
 
-    def create_folder(self, form_data: dict) -> str:
-        folder_data = {
-            "name": form_data.get("name"),
-            "created_at": prosess_created_at(form_data.get("created_at")),
-            "icon": form_data.get("icon"),
-            "cover": form_data.get("cover"),
-        }
+    def create_folder(self, folder: Folder) -> str:
+        folder_id = self.folder_repository.add(folder)
+        return str(folder_id)
 
-        folder = Folder(**folder_data)
-        result = self.folder_repository.add(folder)
+    def update_folder(self, folder: Folder) -> str:
+        self.folder_repository.update(folder.model_dump(), id=folder.id)
 
-        return str(result)
+        params = {"folder.id": folder.id}
+        self.post_repository.update_many({"folder": folder.model_dump()}, **params)
 
-    def update_folder(self, form_data: dict) -> str:
-        folder_id = form_data["id"]
-
-        folder_data = {
-            "name": form_data.get("name"),
-            "created_at": prosess_created_at(form_data.get("created_at")),
-            "icon": form_data.get("icon"),
-            "cover": form_data.get("cover"),
-        }
-        self.folder_repository.update(folder_data, id=folder_id)
-
-        folder_data["id"] = folder_id
-        params = {"folder.id": folder_id}
-        self.post_repository.update_many({"folder": folder_data}, **params)
-
-        return folder_id
+        return folder.id

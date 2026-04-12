@@ -1,0 +1,22 @@
+@font-face {
+  font-family: 'Ambidexter';
+  src: url('./fonts/Ambidexter_Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Bergamasco';
+  src: url('./fonts/Bergamasco Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Disruptors';
+  src: url('./fonts/Disruptors Script.otf') format('opentype');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Passions';
+  src: url('./fonts/PassionsConflictRUS-Regular.otf') format('opentype');
+}

@@ -12,6 +12,10 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],
+        ambidexter: ["Ambidexter", "cursive"],
+        bergamasco: ["Bergamasco", "serif"],
+        disruptors: ["Disruptors", "cursive"],
+        passions: ["Passions", "cursive"],
       },
     },
   },

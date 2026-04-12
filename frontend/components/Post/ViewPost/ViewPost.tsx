@@ -48,7 +48,9 @@ function ViewPost({ postId }: ViewPostProps) {
   return (
     <div className="flex flex-col gap-10">
 
-    <h1 className={title()}>{post.title}</h1>
+    <h1 className="font-passions text-8xl">
+      {post.title}
+    </h1>
 
     <Card className="mb-4 p-3 w-full">
       <CardHeader className="flex justify-between items-start gap-4">

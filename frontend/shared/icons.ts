@@ -1,3 +1,4 @@
+import { Emotion } from "@/types";
 import {
   FolderOpen,
   Heart,
@@ -17,7 +18,9 @@ import {
   Sunrise,
   HouseHeart,
   LoaderPinwheel,
-  EyeClosed
+  EyeClosed,
+  Meh,
+  Frown,
 } from "lucide-react"
 
 export const FOLDER_ICONS = {
@@ -43,3 +46,9 @@ export const FOLDER_ICONS = {
 }
 
 export type FolderIconName = keyof typeof FOLDER_ICONS
+
+export const EMOTION_ICONS = {
+  [Emotion.POSITIVE]: Smile,
+  [Emotion.NEUTRAL]: Meh,
+  [Emotion.NEGATIVE]: Frown,
+}

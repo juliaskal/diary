@@ -5,6 +5,7 @@ import { Link } from "@heroui/link";
 import { Pen } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import type { Post } from "@/types/post";
+import { EMOTION_ICONS } from "@/shared/icons";
 import { DeletePost } from "@/components/Post/PostCard/DeletePost";
 import { PostHeaderInfo } from "@/components/Post/PostCard/PostHeaderInfo";
 
@@ -17,6 +18,7 @@ function PostCard({ post, onDelete }: PostCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const EmotionIcon = post.emotion ? EMOTION_ICONS[post.emotion] : null;
 
   const COLLAPSED_HEIGHT = 250;
 
@@ -55,7 +57,7 @@ function PostCard({ post, onDelete }: PostCardProps) {
           <PostHeaderInfo post={post} />
         </div>
 
-        <div className="flex gap-1">
+        <div className="relative flex gap-1">
           <DeletePost postId={post.id} onDeleted={() => onDelete(post.id)} />
 
           <Button
@@ -67,6 +69,10 @@ function PostCard({ post, onDelete }: PostCardProps) {
           >
             <Pen className="w-4 h-4" />
           </Button>
+
+          {EmotionIcon && (
+            <EmotionIcon className="absolute right-0 top-full mt-3 mr-1 h-5 w-5" />
+          )}
         </div>
       </CardHeader>
 

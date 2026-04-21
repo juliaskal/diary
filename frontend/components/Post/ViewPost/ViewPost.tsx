@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Button } from "@heroui/button";
 import Link from "next/link";
-import { title } from "@/components/primitives";
 import { Pen } from "lucide-react";
 import type { Post } from "@/types/post";
+import { EMOTION_ICONS } from "@/shared/icons";
 import { PostHeaderInfo } from "@/components/Post/PostCard/PostHeaderInfo";
 import { DeletePost } from "@/components/Post/PostCard/DeletePost";
 import { Spinner } from "@heroui/spinner";
@@ -45,6 +45,8 @@ function ViewPost({ postId }: ViewPostProps) {
 
   if (!post) return <div>Запись не найдена</div>;
 
+  const EmotionIcon = post.emotion ? EMOTION_ICONS[post.emotion] : null;
+
   return (
     <div className="flex flex-col gap-10">
 
@@ -80,6 +82,13 @@ function ViewPost({ postId }: ViewPostProps) {
         </div>
       </CardBody>
     </Card>
+
+    <span>
+      Дневник распознал эмоцию как: {post.emotion}
+      {EmotionIcon && (
+            <EmotionIcon/>
+      )}
+    </span>
 
     <Link href="/">
       <Button

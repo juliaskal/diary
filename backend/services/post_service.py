@@ -1,9 +1,10 @@
+from bs4 import BeautifulSoup
 from models import Post, Folder, PostRequest
 from db import GenericRepository, PostRepository
+from services.emotion_service import EmotionService
 
 
 class PostService:
-
     def __init__(
             self,
             post_repository: PostRepository,
@@ -11,6 +12,15 @@ class PostService:
     ):
         self.post_repository = post_repository
         self.folder_repository = folder_repository
+        self.emotion_service = EmotionService()
+
+    def extract_text(self, content_html: str) -> str:
+        soup = BeautifulSoup(content_html or "", "html.parser")
+
+        for image in soup.find_all("img"):
+            image.decompose()
+
+        return " ".join(soup.get_text(separator=" ", strip=True).split())
 
     def create_post(self, post_request: PostRequest) -> str:
         folder = self.folder_repository.find(id=post_request.folder)
@@ -19,6 +29,8 @@ class PostService:
             post_request=post_request,
             folder=folder
         )
+        post.content = self.extract_text(post.content_html)
+        post.emotion = self.emotion_service.predict_emotion(post.content)
         post_id = self.post_repository.add(post)
 
         return str(post_id)

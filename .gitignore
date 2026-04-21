@@ -1,3 +1,5 @@
 venv
 .vscode
 .mypy_cache
+ml/data/
+ml/models/emotion_model/

@@ -1,7 +1,10 @@
-fastapi
+fastapi[standard]
 pydantic
 pydantic-settings
 uvicorn
 pymongo
 python-multipart
 python-dateutil
+beautifulsoup4
+torch
+transformers

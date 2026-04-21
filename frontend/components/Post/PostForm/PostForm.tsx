@@ -1,14 +1,16 @@
 "use client";
+
 import { Button } from "@heroui/button";
 import { useState } from "react";
 import type { Post } from "@/types/post";
 import { Input } from "@heroui/input";
 import { DatePicker } from "@heroui/date-picker";
+import { Checkbox } from "@heroui/checkbox";
 import {
   fromDate,
   now,
   getLocalTimeZone,
-  ZonedDateTime
+  ZonedDateTime,
 } from "@internationalized/date";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
@@ -28,9 +30,10 @@ function PostForm({ post, isNew = true }: PostFormProps) {
   const [date, setDate] = useState<ZonedDateTime | null>(
     post?.created_at
       ? fromDate(new Date(post.created_at), getLocalTimeZone())
-      : now(getLocalTimeZone())
+      : now(getLocalTimeZone()),
   );
   const [folder, setFolder] = useState<string | null>(post?.folder?.id ?? null);
+  const [get_emotion, setEmotion] = useState<boolean>(true);
   const [content_html, setContent] = useState<string>(post?.content_html ?? "");
 
   const handleSubmit = async () => {
@@ -38,17 +41,18 @@ function PostForm({ post, isNew = true }: PostFormProps) {
       id: post?.id,
       title,
       folder,
+      get_emotion,
       content_html,
       created_at: date?.toDate().toISOString(),
     };
 
     if (!isNew) {
-      payload.id = post!.id
+      payload.id = post!.id;
     }
 
     const url = isNew
       ? `${siteConfig.backendDomain}/api/post/new`
-      : `${siteConfig.backendDomain}/api/post/update`
+      : `${siteConfig.backendDomain}/api/post/update`;
 
     try {
       const res = await fetch(url, {
@@ -66,7 +70,6 @@ function PostForm({ post, isNew = true }: PostFormProps) {
 
       const data = await res.json();
       router.push(`/posts/${data.id}`);
-
     } catch (err) {
       console.error("Ошибка при отправке:", err);
     }
@@ -74,7 +77,6 @@ function PostForm({ post, isNew = true }: PostFormProps) {
 
   return (
     <div className="w-full flex flex-col items-start gap-4 text-left">
-
       <Input
         label="Заголовок"
         labelPlacement="outside"
@@ -94,15 +96,22 @@ function PostForm({ post, isNew = true }: PostFormProps) {
         onChange={setDate}
       />
 
-      <FolderSelect value={folder} onChange={setFolder}/>
+      <FolderSelect value={folder} onChange={setFolder} />
+
+      <Checkbox
+        id="get_emotion"
+        isSelected={get_emotion}
+        onValueChange={setEmotion}
+      >
+        <span className="text-small text-foreground">Распознать эмоцию</span>
+      </Checkbox>
 
       <Editor onChange={setContent} content_html={post?.content_html ?? ""} />
 
-      <div className="flex flex-wrap gap-4 items-center mt-4">
-
+      <div className="mt-4 flex flex-wrap items-center gap-4">
         <Button
           size="sm"
-          className="bg-linear-to-tr from-rose-300 to-pink-400 shadow-lg tracking-widest px-8"
+          className="bg-linear-to-tr from-rose-300 to-pink-400 px-8 tracking-widest shadow-lg"
           radius="full"
           onPress={handleSubmit}
         >
@@ -112,16 +121,15 @@ function PostForm({ post, isNew = true }: PostFormProps) {
         <Link href="/">
           <Button
             size="sm"
-            className="bg-linear-to-tr from-neutral-500 to-gray-700 shadow-lg tracking-widest px-8 text-white"
+            className="bg-linear-to-tr from-neutral-500 to-gray-700 px-8 text-white shadow-lg tracking-widest"
             radius="full"
           >
             отменить
           </Button>
         </Link>
-
       </div>
     </div>
   );
 }
 
-export { PostForm }
+export { PostForm };

@@ -49,59 +49,55 @@ function ViewPost({ postId }: ViewPostProps) {
 
   return (
     <div className="flex flex-col gap-10">
+      <h1 className="font-passions text-8xl">{post.title}</h1>
 
-    <h1 className="font-passions text-8xl">
-      {post.title}
-    </h1>
+      <Card className="mb-4 w-full p-3">
+        <CardHeader className="flex items-start justify-between gap-4">
+          <PostHeaderInfo post={post} />
 
-    <Card className="mb-4 p-3 w-full">
-      <CardHeader className="flex justify-between items-start gap-4">
+          <div className="flex gap-1">
+            <DeletePost postId={post.id} onDeleted={handlePostDelete} />
 
-        <PostHeaderInfo post={post} />
+            <Button
+              as={Link}
+              href={`/posts/${post.id}/edit`}
+              isIconOnly
+              size="sm"
+              variant="light"
+            >
+              <Pen className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
 
-        <div className="flex gap-1">
-          <DeletePost postId={post.id} onDeleted={handlePostDelete}/>
+        <CardBody>
+          <div className="sun-content">
+            <div
+              className="whitespace-pre-line text-default-700"
+              dangerouslySetInnerHTML={{ __html: post.content_html }}
+            />
+          </div>
+        </CardBody>
+      </Card>
 
-          <Button as={Link}
-            href={`/posts/${post.id}/edit`}
-            isIconOnly
-            size="sm"
-            variant="light"
-          >
-            <Pen className="w-4 h-4" />
-          </Button>
-
-        </div>
-      </CardHeader>
-
-      <CardBody>
-        <div className="sun-content">
-          <div className="text-default-700 whitespace-pre-line"
-            dangerouslySetInnerHTML={{ __html: post.content_html }}
-          />
-        </div>
-      </CardBody>
-    </Card>
-
-    <span>
-      Дневник распознал эмоцию как: {post.emotion}
-      {EmotionIcon && (
-            <EmotionIcon/>
+      {post.emotion && (
+        <span className="inline-flex items-center gap-2 self-start text-left">
+          Дневник распознал эмоцию как: {post.emotion}
+          {EmotionIcon && <EmotionIcon className="h-5 w-5" />}
+        </span>
       )}
-    </span>
 
-    <Link href="/">
-      <Button
+      <Link href="/">
+        <Button
           size="sm"
-          className="bg-linear-to-tr from-rose-300 to-pink-400 shadow-lg tracking-widest px-8"
+          className="bg-linear-to-tr from-rose-300 to-pink-400 px-8 tracking-widest shadow-lg"
           radius="full"
-      >
-        на главную
-      </Button>
-    </Link>
-
+        >
+          на главную
+        </Button>
+      </Link>
     </div>
   );
 }
 
-export { ViewPost }
+export { ViewPost };

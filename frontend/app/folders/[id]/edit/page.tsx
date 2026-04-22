@@ -1,28 +1,15 @@
 import type { Folder } from "@/types/folder";
 import { FolderForm } from "@/components/Folder/FolderForm";
-import { siteConfig } from "@/config/site";
 import clsx from "clsx";
 import { title } from "@/components/primitives";
+import { getFolderById } from "@/shared/api/folders";
 
 type Props = {
   params: { id: string };
 };
 
-async function getFolder(id: string): Promise<Folder> {
-  const res = await fetch(
-    `${siteConfig.backendDomain}/api/folder/${id}`,
-    { cache: "no-store" }
-  );
-
-  if (!res.ok) {
-    throw new Error("Не удалось загрузить папку");
-  }
-
-  return res.json();
-}
-
 export default async function EditFoldersPage({ params }: Props) {
-  const folder = await getFolder(params.id);
+  const folder: Folder = await getFolderById(params.id);
 
   return (
     <div className="flex flex-col gap-10">

@@ -3,7 +3,7 @@ from models.freeze_model import FreezeModel
 from models.domain.post import Post
 from models.domain.folder import Folder
 from models.post_request import PostRequest
-from models.domain import Emotion
+from models.domain import Emotion, Sentiment
 
 
 __all__ = [
@@ -13,4 +13,5 @@ __all__ = [
     'Folder',
     'PostRequest',
     'Emotion',
+    'Sentiment',
 ]

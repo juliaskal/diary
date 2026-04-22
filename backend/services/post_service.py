@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from models import Post, Folder, PostRequest
 from db import GenericRepository, PostRepository
-from services.emotion_service import EmotionService
+from services.sentiment_service import SentimentService
 
 
 class PostService:
@@ -12,7 +12,7 @@ class PostService:
     ):
         self.post_repository = post_repository
         self.folder_repository = folder_repository
-        self.emotion_service = EmotionService()
+        self.emotion_service = SentimentService()
 
     def extract_text(self, content_html: str) -> str:
         soup = BeautifulSoup(content_html or "", "html.parser")
@@ -31,7 +31,7 @@ class PostService:
         )
         post.content = self.extract_text(post.content_html)
         if post_request.get_emotion:
-            post.emotion = self.emotion_service.predict_emotion(post.content)
+            post.emotion = self.emotion_service.predict_primary_emotion(post.content, allow_download=False)
 
         return post
 

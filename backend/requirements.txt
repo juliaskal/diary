@@ -8,3 +8,4 @@ python-dateutil
 beautifulsoup4
 torch
 transformers
+huggingface-hub

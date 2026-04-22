@@ -2,7 +2,7 @@ from datetime import datetime
 from pydantic import BaseModel, field_serializer
 from models.domain.folder import Folder
 from models.post_request import PostRequest
-from models.domain.emotion import Emotion
+from models.domain.sentiment import Sentiment
 
 
 class Post(BaseModel):
@@ -14,10 +14,10 @@ class Post(BaseModel):
     content_html: str = ""
     is_archived: bool = False
     is_deleted: bool = False
-    emotion: Emotion | None = None
+    emotion: Sentiment | None = None
 
     @field_serializer("emotion")
-    def serialize_emotion(self, emotion: Emotion | None) -> str | None:
+    def serialize_emotion(self, emotion: Sentiment | None) -> str | None:
         return emotion.value if emotion is not None else None
 
     @classmethod

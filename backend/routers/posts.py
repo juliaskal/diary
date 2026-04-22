@@ -13,8 +13,17 @@ async def get_posts(
     post_service: PostServiceDependency,
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=10, ge=1, le=100),
+    folder_id: str | None = Query(default=None),
+    is_archived: bool | None = Query(default=None),
+    search: str | None = Query(default=None),
 ):
-    return post_service.get_posts(page=page, page_size=page_size)
+    return post_service.get_posts(
+        page=page,
+        page_size=page_size,
+        folder_id=folder_id,
+        is_archived=is_archived,
+        search=search,
+    )
 
 
 @posts.get("/post/{post_id}", response_model=Post)

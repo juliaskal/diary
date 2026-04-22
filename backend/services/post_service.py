@@ -50,13 +50,34 @@ class PostService:
     def get_post_by_id(self, post_id: str) -> Post:
         return self.post_repository.get(id=post_id)
 
-    def get_posts(self, page: int = 1, page_size: int = 10) -> PostPage:
+    def get_posts(
+        self,
+        page: int = 1,
+        page_size: int = 10,
+        folder_id: str | None = None,
+        is_archived: bool | None = None,
+        search: str | None = None,
+    ) -> PostPage:
         safe_page = max(page, 1)
         safe_page_size = max(page_size, 1)
         start = (safe_page - 1) * safe_page_size
         end = start + safe_page_size
 
         posts = self.post_repository.get_list()
+        if folder_id is not None:
+            posts = [
+                post for post in posts
+                if post.folder is not None and post.folder.id == folder_id
+            ]
+        if is_archived is not None:
+            posts = [post for post in posts if post.is_archived == is_archived]
+        if search:
+            normalized_search = search.strip().lower()
+            posts = [
+                post for post in posts
+                if normalized_search in (post.title or "").lower()
+                or normalized_search in (post.content or "").lower()
+            ]
         posts = sorted(posts, key=lambda post: post.created_at, reverse=True)
         total = len(posts)
         posts = posts[start:end]

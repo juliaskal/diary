@@ -5,5 +5,5 @@ export interface Folder {
   name: string;
   icon: FolderIconName | null;
   cover: string | null;
-  craeted_at: string;
+  created_at: string;
 }

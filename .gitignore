@@ -3,3 +3,4 @@ venv
 .mypy_cache
 ml/data/
 ml/models/emotion_model/
+ml/models/emotion_direction_model/.cache/

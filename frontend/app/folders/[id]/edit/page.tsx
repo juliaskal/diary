@@ -21,7 +21,7 @@ async function getFolder(id: string): Promise<Folder> {
   return res.json();
 }
 
-export default async function EditFolderPage({ params }: Props) {
+export default async function EditFoldersPage({ params }: Props) {
   const folder = await getFolder(params.id);
 
   return (

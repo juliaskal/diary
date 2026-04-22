@@ -1,1 +1,1 @@
-export { FolderPage } from "@/components/Folder/FolderPage"
+export { FoldersPage } from "@/components/Folder/FoldersPage"

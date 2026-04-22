@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from models import Post, Folder, PostRequest
+from models import Post, Folder, PostRequest, PostPage
 from db import GenericRepository, PostRepository
 from services.sentiment_service import SentimentService
 
@@ -50,9 +50,23 @@ class PostService:
     def get_post_by_id(self, post_id: str) -> Post:
         return self.post_repository.get(id=post_id)
 
-    def get_posts(self):
+    def get_posts(self, page: int = 1, page_size: int = 10) -> PostPage:
+        safe_page = max(page, 1)
+        safe_page_size = max(page_size, 1)
+        start = (safe_page - 1) * safe_page_size
+        end = start + safe_page_size
+
         posts = self.post_repository.get_list()
-        return sorted(posts, key=lambda post: post.created_at, reverse=True)
+        posts = sorted(posts, key=lambda post: post.created_at, reverse=True)
+        total = len(posts)
+        posts = posts[start:end]
+
+        return PostPage.create(
+            items=posts,
+            total=total,
+            page=safe_page,
+            page_size=safe_page_size,
+        )
 
     def delete_post(self, post_id: str) -> int:
         return self.post_repository.delete(id=post_id)

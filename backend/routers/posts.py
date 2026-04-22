@@ -1,16 +1,20 @@
 from typing import Annotated
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Query
 from fastapi.responses import JSONResponse
 from dependencies import PostServiceDependency
-from models import Post, PostRequest
+from models import Post, PostPage, PostRequest
 
 
 posts = APIRouter(prefix="/api")
 
 
-@posts.get("/posts", response_model=list[Post])
-async def get_posts(post_service: PostServiceDependency):
-    return post_service.get_posts()
+@posts.get("/posts", response_model=PostPage)
+async def get_posts(
+    post_service: PostServiceDependency,
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1, le=100),
+):
+    return post_service.get_posts(page=page, page_size=page_size)
 
 
 @posts.get("/post/{post_id}", response_model=Post)

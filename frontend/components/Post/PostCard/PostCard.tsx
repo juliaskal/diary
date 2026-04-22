@@ -4,6 +4,7 @@ import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
 import { Pen } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { Emoji } from "react-apple-emojis";
 import type { Post } from "@/types/post";
 import { EMOTION_ICONS } from "@/shared/icons";
 import { DeletePost } from "@/components/Post/PostCard/DeletePost";
@@ -18,7 +19,7 @@ function PostCard({ post, onDelete }: PostCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
-  const EmotionIcon = post.emotion ? EMOTION_ICONS[post.emotion] : null;
+  const emotionIconName = post.emotion ? EMOTION_ICONS[post.emotion] : null;
 
   const COLLAPSED_HEIGHT = 250;
 
@@ -70,8 +71,14 @@ function PostCard({ post, onDelete }: PostCardProps) {
             <Pen className="w-4 h-4" />
           </Button>
 
-          {EmotionIcon && (
-            <EmotionIcon className="absolute right-0 top-full mt-3 mr-1 h-5 w-5" />
+          {emotionIconName && (
+            <Emoji
+              name={emotionIconName}
+              alt={post.emotion ?? "emotion"}
+              className="absolute right-0 top-full mt-3 mr-1 h-5 w-5"
+              width={20}
+              height={20}
+            />
           )}
         </div>
       </CardHeader>

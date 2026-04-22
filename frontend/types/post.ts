@@ -1,5 +1,5 @@
 import type { Folder } from './folder';
-import type { Emotion } from './emotion';
+import type { Sentiment } from './sentiment';
 
 export interface Post {
   id: string;
@@ -7,5 +7,5 @@ export interface Post {
   content_html: string;
   created_at: string;
   folder: Folder | null;
-  emotion: Emotion | null;
+  emotion: Sentiment | null;
 }

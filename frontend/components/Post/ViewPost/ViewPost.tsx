@@ -5,6 +5,7 @@ import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Button } from "@heroui/button";
 import Link from "next/link";
 import { Pen } from "lucide-react";
+import { Emoji } from "react-apple-emojis";
 import type { Post } from "@/types/post";
 import { EMOTION_ICONS } from "@/shared/icons";
 import { PostHeaderInfo } from "@/components/Post/PostCard/PostHeaderInfo";
@@ -45,7 +46,7 @@ function ViewPost({ postId }: ViewPostProps) {
 
   if (!post) return <div>Запись не найдена</div>;
 
-  const EmotionIcon = post.emotion ? EMOTION_ICONS[post.emotion] : null;
+  const emotionIconName = post.emotion ? EMOTION_ICONS[post.emotion] : null;
 
   return (
     <div className="flex flex-col gap-10">
@@ -83,7 +84,14 @@ function ViewPost({ postId }: ViewPostProps) {
       {post.emotion && (
         <span className="inline-flex items-center gap-2 self-start text-left">
           Дневник распознал эмоцию как: {post.emotion}
-          {EmotionIcon && <EmotionIcon className="h-5 w-5" />}
+          {emotionIconName && (
+            <Emoji
+              name={emotionIconName}
+              alt={post.emotion}
+              width={24}
+              height={24}
+            />
+          )}
         </span>
       )}
 

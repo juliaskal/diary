@@ -1,10 +1,9 @@
 from datetime import datetime
-from models import FreezeModel
-from pydantic import field_validator
+from pydantic import BaseModel, field_validator
 from utils import prosess_created_at
 
 
-class Folder(FreezeModel):
+class Folder(BaseModel):
     id: str | None = None
     name: str
     icon: str | None = None

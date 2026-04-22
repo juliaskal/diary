@@ -1,16 +1,19 @@
-from pydantic_settings import BaseSettings
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from models import DBMS
 
 
 class Settings(BaseSettings):
-    connection_string: str
-    database_name: str
-    dbms: DBMS
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+        extra="ignore",
+    )
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = True
+    connection_string: str = Field(validation_alias="CONNECTION_STRING")
+    database_name: str = Field(validation_alias="DATABASE_NAME")
+    dbms: DBMS = Field(validation_alias="DBMS")
 
 
 settings = Settings()

@@ -1,3 +1,4 @@
+import { Sentiment } from "@/types";
 import {
   FolderOpen,
   Heart,
@@ -17,7 +18,7 @@ import {
   Sunrise,
   HouseHeart,
   LoaderPinwheel,
-  EyeClosed
+  EyeClosed,
 } from "lucide-react"
 
 export const FOLDER_ICONS = {
@@ -43,3 +44,34 @@ export const FOLDER_ICONS = {
 }
 
 export type FolderIconName = keyof typeof FOLDER_ICONS
+
+export const EMOTION_ICONS = {
+  [Sentiment.ADMIRATION]: "star-struck",
+  [Sentiment.AMUSEMENT]: "face-with-tears-of-joy",
+  [Sentiment.ANGER]: "pouting-face",
+  [Sentiment.ANNOYANCE]: "unamused-face",
+  [Sentiment.APPROVAL]: "thumbs-up",
+  [Sentiment.CARING]: "hugging-face",
+  [Sentiment.CONFUSION]: "confused-face",
+  [Sentiment.CURIOSITY]: "thinking-face",
+  [Sentiment.DESIRE]: "drooling-face",
+  [Sentiment.DISAPPOINTMENT]: "pensive-face",
+  [Sentiment.DISAPPROVAL]: "thumbs-down",
+  [Sentiment.DISGUST]: "nauseated-face",
+  [Sentiment.EMBARRASSMENT]: "flushed-face",
+  [Sentiment.EXCITEMENT]: "partying-face",
+  [Sentiment.FEAR]: "fearful-face",
+  [Sentiment.GRATITUDE]: "folded-hands",
+  [Sentiment.GRIEF]: "loudly-crying-face",
+  [Sentiment.JOY]: "beaming-face-with-smiling-eyes",
+  [Sentiment.LOVE]: "red-heart",
+  [Sentiment.NERVOUSNESS]: "anxious-face-with-sweat",
+  [Sentiment.OPTIMISM]: "smiling-face-with-sunglasses",
+  [Sentiment.PRIDE]: "smiling-face-with-sunglasses",
+  [Sentiment.REALIZATION]: "light-bulb",
+  [Sentiment.RELIEF]: "relieved-face",
+  [Sentiment.REMORSE]: "pleading-face",
+  [Sentiment.SADNESS]: "crying-face",
+  [Sentiment.SURPRISE]: "astonished-face",
+  [Sentiment.NEUTRAL]: "neutral-face",
+}

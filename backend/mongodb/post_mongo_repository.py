@@ -15,9 +15,7 @@ class PostMongoRepository:
         self._mongo_repository = DictMongoRepository(connection_string, database_name, collection_name, client_kwargs)
 
     def model_to_document(self, model: Post):
-        document = model.model_dump()
-        document['model'] = type(model).__name__
-        return document
+        return model.model_dump()
 
     def add(self, model: Post) -> str:
         document = self.model_to_document(model)

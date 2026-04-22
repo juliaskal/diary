@@ -1,3 +1,3 @@
 **Приложение Дневник**
 
-Fastapi + MongoDB + React (TypeScript)
+Fastapi, MongoDB, React (TypeScript), Machine Learning

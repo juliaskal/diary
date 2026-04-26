@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -17,8 +19,20 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { SearchIcon, DiaryIcon } from "@/components/icons";
 import { Settings } from 'lucide-react';
 import { Sidebar } from "@/components/sidebar";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export const Navbar = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      router.push(`/search?q=${encodeURIComponent(query)}`);
+    }
+  };
+
   const searchInput = (
     <Input
       aria-label="Search"
@@ -27,11 +41,18 @@ export const Navbar = () => {
         input: "text-sm",
       }}
       labelPlacement="outside"
-      placeholder="Search..."
+      placeholder="search..."
       startContent={
         <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
       }
       type="search"
+      value={searchQuery}
+      onValueChange={setSearchQuery}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          handleSearch(searchQuery);
+        }
+      }}
     />
   );
 
@@ -76,6 +97,7 @@ export const Navbar = () => {
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
       </NavbarContent>
 
+      {/* NavbarMenu отображается на мобильных устройствах когда экран узкий */}
       <NavbarMenu>
         {searchInput}
         <div className="mx-4 mt-2 flex flex-col gap-2">
@@ -89,7 +111,7 @@ export const Navbar = () => {
                       ? "danger"
                       : "foreground"
                 }
-                href="#"
+                href={item.href}
                 size="lg"
               >
                 {item.label}

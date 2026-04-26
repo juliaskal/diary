@@ -55,8 +55,6 @@ class PostService:
         self,
         month_date: date | None = None,
         folder_id: str | None = None,
-        is_archived: bool | None = None,
-        search: str | None = None,
     ) -> list[Post]:
 
         posts = self.post_repository.get_list()
@@ -73,17 +71,6 @@ class PostService:
                 if post.folder is not None and post.folder.id == folder_id
             ]
 
-        if is_archived is not None:
-            posts = [post for post in posts if post.is_archived == is_archived]
-
-        if search:
-            normalized_search = search.strip().lower()
-            posts = [
-                post for post in posts
-                if normalized_search in (post.title or "").lower()
-                or normalized_search in (post.content or "").lower()
-            ]
-
         posts = sorted(posts, key=lambda post: post.created_at, reverse=True)
 
         return posts
@@ -93,8 +80,6 @@ class PostService:
         page: int = 1,
         page_size: int = 10,
         folder_id: str | None = None,
-        is_archived: bool | None = None,
-        search: str | None = None,
     ) -> PostPage:
 
         safe_page = max(page, 1)
@@ -102,17 +87,13 @@ class PostService:
         start = (safe_page - 1) * safe_page_size
         end = start + safe_page_size
 
-        posts = self.get_posts(
-            folder_id=folder_id,
-            is_archived=is_archived,
-            search=search,
-        )
-
-        posts = posts[start:end]
+        all_posts = self.get_posts(folder_id=folder_id)
+        total = len(all_posts)
+        posts = all_posts[start:end]
 
         return PostPage.create(
             items=posts,
-            total=len(posts),
+            total=total,
             page=safe_page,
             page_size=safe_page_size,
         )
@@ -121,15 +102,11 @@ class PostService:
         self,
         month_date: date,
         folder_id: str | None = None,
-        is_archived: bool | None = None,
-        search: str | None = None,
     ) -> PostPage:
 
         posts = self.get_posts(
             month_date=month_date,
             folder_id=folder_id,
-            is_archived=is_archived,
-            search=search,
         )
         total = len(posts)
 
@@ -142,3 +119,16 @@ class PostService:
 
     def delete_post(self, post_id: str) -> int:
         return self.post_repository.delete(id=post_id)
+
+    def search_posts(self, query: str) -> list[Post]:
+        posts = self.post_repository.get_list()
+        normalized_query = query.strip().lower()
+
+        filtered_posts = [
+            post for post in posts
+            if (normalized_query in (post.title or "").lower()
+                or normalized_query in (post.content or "").lower()
+                or normalized_query in str(post.created_at).lower())
+        ]
+
+        return sorted(filtered_posts, key=lambda post: post.created_at, reverse=True)

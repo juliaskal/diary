@@ -2,7 +2,7 @@ from typing import Annotated
 from datetime import date
 from fastapi import APIRouter, Body, Query
 from fastapi.responses import JSONResponse
-from dependencies import PostServiceDependency
+from dependencies import PostServiceDependency, FolderServiceDependency
 from models import Post, PostPage, PostRequest
 
 
@@ -15,15 +15,11 @@ async def get_posts(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=10, ge=1, le=100),
     folder_id: str | None = Query(default=None),
-    is_archived: bool | None = Query(default=None),
-    search: str | None = Query(default=None),
 ):
     return post_service.get_posts_page(
         page=page,
         page_size=page_size,
         folder_id=folder_id,
-        is_archived=is_archived,
-        search=search,
     )
 
 
@@ -32,15 +28,26 @@ async def get_posts_of_month(
     post_service: PostServiceDependency,
     month_date: date,
     folder_id: str | None = Query(default=None),
-    is_archived: bool | None = Query(default=None),
-    search: str | None = Query(default=None),
 ):
     return post_service.get_posts_of_month(
         month_date=month_date,
         folder_id=folder_id,
-        is_archived=is_archived,
-        search=search,
     )
+
+
+@posts.get("/search")
+async def search(
+    post_service: PostServiceDependency,
+    folder_service: FolderServiceDependency,
+    q: str = Query(..., min_length=1),
+):
+    posts_results = post_service.search_posts(q)
+    folders_results = folder_service.search_folders(q)
+
+    return {
+        "posts": posts_results,
+        "folders": folders_results,
+    }
 
 
 @posts.get("/post/{post_id}", response_model=Post)

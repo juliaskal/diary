@@ -41,3 +41,15 @@ class FolderService:
         self.post_repository.update_many({"folder": folder.model_dump()}, **params)
 
         return folder.id
+
+    def search_folders(self, query: str) -> list[Folder]:
+        folders = self.folder_repository.get_list()
+        normalized_query = query.strip().lower()
+
+        filtered_folders = [
+            folder for folder in folders
+            if (normalized_query in folder.name.lower()
+                or normalized_query in str(folder.created_at).lower())
+        ]
+
+        return sorted(filtered_folders, key=lambda folder: folder.created_at, reverse=True)

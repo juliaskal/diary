@@ -33,7 +33,7 @@ function PostForm({ post, isNew = true }: PostFormProps) {
       : now(getLocalTimeZone()),
   );
   const [folder, setFolder] = useState<string | null>(post?.folder?.id ?? null);
-  const [get_emotion, setEmotion] = useState<boolean>(true);
+  const [get_emotion, setEmotion] = useState<boolean>(false);
   const [content_html, setContent] = useState<string>(post?.content_html ?? "");
 
   const handleSubmit = async () => {

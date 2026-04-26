@@ -13,7 +13,7 @@ class PostRequest(FreezeModel):
     content_html: str = ""
     is_archived: bool = False
     is_deleted: bool = False
-    get_emotion: bool = True
+    get_emotion: bool = False
 
     @field_validator('created_at', mode='before')
     def validate_created_date(cls, v):

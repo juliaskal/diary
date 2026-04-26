@@ -23,7 +23,7 @@ export default function Feed() {
   }
 
   return (
-    <div ref={listTopRef} className="max-w-4xl mx-auto px-4 py-6">
+    <div ref={listTopRef} className="max-w-4xl mx-auto px-4 pb-6">
       <PostList
         posts={posts}
         currentPage={page}

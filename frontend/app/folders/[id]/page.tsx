@@ -43,7 +43,7 @@ export default function Folder() {
     <>
       <FolderInfo folder={folder} onDelete={handleFolderDelete} />
       
-      <div ref={listTopRef} className="max-w-4xl mx-auto px-4 py-6">
+      <div ref={listTopRef} className="max-w-4xl mx-auto px-4 py-8">
         <PostList
           posts={posts}
           currentPage={page}

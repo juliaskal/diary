@@ -1,4 +1,4 @@
-export default function FolderLayout({
+export default function FeedLayout({
   children,
 }: {
   children: React.ReactNode;

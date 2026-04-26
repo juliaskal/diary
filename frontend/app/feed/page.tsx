@@ -3,7 +3,7 @@ import { PostList } from "@/components/Post/PostList";
 import {Spinner} from "@heroui/spinner";
 import { usePostsPage } from "@/hooks/usePostsPage";
 
-export default function Posts() {
+export default function Feed() {
   const {
     posts,
     page,

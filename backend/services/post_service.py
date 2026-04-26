@@ -1,5 +1,6 @@
+from datetime import date
 from bs4 import BeautifulSoup
-from models import Post, Folder, PostRequest
+from models import Post, Folder, PostRequest, PostPage
 from db import GenericRepository, PostRepository
 from services.sentiment_service import SentimentService
 
@@ -50,9 +51,84 @@ class PostService:
     def get_post_by_id(self, post_id: str) -> Post:
         return self.post_repository.get(id=post_id)
 
-    def get_posts(self):
+    def get_posts(
+        self,
+        month_date: date | None = None,
+        folder_id: str | None = None,
+    ) -> list[Post]:
+
         posts = self.post_repository.get_list()
-        return sorted(posts, key=lambda post: post.created_at, reverse=True)
+
+        if month_date is not None:
+            posts = [
+                post for post in posts
+                if post.created_at.month == month_date.month
+            ]
+
+        if folder_id is not None:
+            posts = [
+                post for post in posts
+                if post.folder is not None and post.folder.id == folder_id
+            ]
+
+        posts = sorted(posts, key=lambda post: post.created_at, reverse=True)
+
+        return posts
+
+    def get_posts_page(
+        self,
+        page: int = 1,
+        page_size: int = 10,
+        folder_id: str | None = None,
+    ) -> PostPage:
+
+        safe_page = max(page, 1)
+        safe_page_size = max(page_size, 1)
+        start = (safe_page - 1) * safe_page_size
+        end = start + safe_page_size
+
+        all_posts = self.get_posts(folder_id=folder_id)
+        total = len(all_posts)
+        posts = all_posts[start:end]
+
+        return PostPage.create(
+            items=posts,
+            total=total,
+            page=safe_page,
+            page_size=safe_page_size,
+        )
+
+    def get_posts_of_month(
+        self,
+        month_date: date,
+        folder_id: str | None = None,
+    ) -> PostPage:
+
+        posts = self.get_posts(
+            month_date=month_date,
+            folder_id=folder_id,
+        )
+        total = len(posts)
+
+        return PostPage.create(
+            items=posts,
+            total=total,
+            page=1,
+            page_size=total,
+        )
 
     def delete_post(self, post_id: str) -> int:
         return self.post_repository.delete(id=post_id)
+
+    def search_posts(self, query: str) -> list[Post]:
+        posts = self.post_repository.get_list()
+        normalized_query = query.strip().lower()
+
+        filtered_posts = [
+            post for post in posts
+            if (normalized_query in (post.title or "").lower()
+                or normalized_query in (post.content or "").lower()
+                or normalized_query in str(post.created_at).lower())
+        ]
+
+        return sorted(filtered_posts, key=lambda post: post.created_at, reverse=True)

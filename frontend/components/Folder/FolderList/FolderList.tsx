@@ -13,12 +13,12 @@ import { Pen } from "lucide-react";
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
 
-interface FolderPageProps {
+interface FoldersPageProps {
   folders: Folder[];
   onDelete: (folderId: string) => void;
 }
 
-function FolderList({ folders, onDelete }: FolderPageProps) {
+function FolderList({ folders, onDelete }: FoldersPageProps) {
   return (
     <div className="flex h-full w-full items-center justify-center overflow-hidden">
       <FolderCards className="" folders={folders} onDelete={onDelete} />{" "}

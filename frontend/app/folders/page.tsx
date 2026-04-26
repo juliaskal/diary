@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { Folder } from "@/types/folder";
 import {Spinner} from "@heroui/spinner";
 import { siteConfig } from "@/config/site";
-import { FolderPage } from "@/components/Folder";
+import { FoldersPage } from "@/components/Folder";
 
 
 export default function Folders() {
@@ -33,6 +33,6 @@ export default function Folders() {
   </div>;
 
   return (
-      <FolderPage folders={folders} onDelete={handleFolderDelete}/>
+      <FoldersPage folders={folders} onDelete={handleFolderDelete}/>
   );
 }

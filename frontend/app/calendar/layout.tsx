@@ -1,4 +1,4 @@
-export default function FolderLayout({
+export default function CalendarLayout({
   children,
 }: {
   children: React.ReactNode;

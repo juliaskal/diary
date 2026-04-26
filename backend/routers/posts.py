@@ -1,4 +1,5 @@
 from typing import Annotated
+from datetime import date
 from fastapi import APIRouter, Body, Query
 from fastapi.responses import JSONResponse
 from dependencies import PostServiceDependency
@@ -17,9 +18,25 @@ async def get_posts(
     is_archived: bool | None = Query(default=None),
     search: str | None = Query(default=None),
 ):
-    return post_service.get_posts(
+    return post_service.get_posts_page(
         page=page,
         page_size=page_size,
+        folder_id=folder_id,
+        is_archived=is_archived,
+        search=search,
+    )
+
+
+@posts.get("/posts-of-month", response_model=PostPage)
+async def get_posts_of_month(
+    post_service: PostServiceDependency,
+    month_date: date,
+    folder_id: str | None = Query(default=None),
+    is_archived: bool | None = Query(default=None),
+    search: str | None = Query(default=None),
+):
+    return post_service.get_posts_of_month(
+        month_date=month_date,
         folder_id=folder_id,
         is_archived=is_archived,
         search=search,

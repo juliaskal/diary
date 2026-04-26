@@ -1,3 +1,4 @@
+from datetime import date
 from bs4 import BeautifulSoup
 from models import Post, Folder, PostRequest, PostPage
 from db import GenericRepository, PostRepository
@@ -52,25 +53,29 @@ class PostService:
 
     def get_posts(
         self,
-        page: int = 1,
-        page_size: int = 10,
+        month_date: date | None = None,
         folder_id: str | None = None,
         is_archived: bool | None = None,
         search: str | None = None,
-    ) -> PostPage:
-        safe_page = max(page, 1)
-        safe_page_size = max(page_size, 1)
-        start = (safe_page - 1) * safe_page_size
-        end = start + safe_page_size
+    ) -> list[Post]:
 
         posts = self.post_repository.get_list()
+
+        if month_date is not None:
+            posts = [
+                post for post in posts
+                if post.created_at.month == month_date.month
+            ]
+
         if folder_id is not None:
             posts = [
                 post for post in posts
                 if post.folder is not None and post.folder.id == folder_id
             ]
+
         if is_archived is not None:
             posts = [post for post in posts if post.is_archived == is_archived]
+
         if search:
             normalized_search = search.strip().lower()
             posts = [
@@ -78,15 +83,61 @@ class PostService:
                 if normalized_search in (post.title or "").lower()
                 or normalized_search in (post.content or "").lower()
             ]
+
         posts = sorted(posts, key=lambda post: post.created_at, reverse=True)
-        total = len(posts)
+
+        return posts
+
+    def get_posts_page(
+        self,
+        page: int = 1,
+        page_size: int = 10,
+        folder_id: str | None = None,
+        is_archived: bool | None = None,
+        search: str | None = None,
+    ) -> PostPage:
+
+        safe_page = max(page, 1)
+        safe_page_size = max(page_size, 1)
+        start = (safe_page - 1) * safe_page_size
+        end = start + safe_page_size
+
+        posts = self.get_posts(
+            folder_id=folder_id,
+            is_archived=is_archived,
+            search=search,
+        )
+
         posts = posts[start:end]
 
         return PostPage.create(
             items=posts,
-            total=total,
+            total=len(posts),
             page=safe_page,
             page_size=safe_page_size,
+        )
+
+    def get_posts_of_month(
+        self,
+        month_date: date,
+        folder_id: str | None = None,
+        is_archived: bool | None = None,
+        search: str | None = None,
+    ) -> PostPage:
+
+        posts = self.get_posts(
+            month_date=month_date,
+            folder_id=folder_id,
+            is_archived=is_archived,
+            search=search,
+        )
+        total = len(posts)
+
+        return PostPage.create(
+            items=posts,
+            total=total,
+            page=1,
+            page_size=total,
         )
 
     def delete_post(self, post_id: str) -> int:

@@ -17,7 +17,7 @@ class PostRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_list(self, start: int, end: int, **filter) -> list[Post]:
+    def get_list(self, **filter) -> list[Post]:
         raise NotImplementedError
 
     @abstractmethod

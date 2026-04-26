@@ -1,7 +1,5 @@
 from math import ceil
-
 from pydantic import BaseModel
-
 from models.domain.post import Post
 
 

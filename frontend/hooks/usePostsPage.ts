@@ -13,8 +13,6 @@ export function usePostsPage({
   initialPage = 1,
   pageSize = 10,
   folderId,
-  isArchived,
-  search,
 }: UsePostsPageParams = {}) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [page, setPage] = useState(initialPage);
@@ -25,7 +23,7 @@ export function usePostsPage({
 
   useEffect(() => {
     setPage(initialPage);
-  }, [initialPage, folderId, isArchived, search]);
+  }, [initialPage, folderId]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -35,8 +33,6 @@ export function usePostsPage({
       page,
       pageSize,
       folderId,
-      isArchived,
-      search,
     })
       .then((data) => {
         if (isCancelled) {
@@ -60,7 +56,7 @@ export function usePostsPage({
     return () => {
       isCancelled = true;
     };
-  }, [page, pageSize, folderId, isArchived, search]);
+  }, [page, pageSize, folderId]);
 
   function handlePostDelete(postId: string) {
     const nextPosts = posts.filter((post) => post.id !== postId);

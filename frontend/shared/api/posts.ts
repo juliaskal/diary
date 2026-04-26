@@ -5,16 +5,12 @@ export interface GetPostsPageParams {
   page?: number;
   pageSize?: number;
   folderId?: string;
-  isArchived?: boolean;
-  search?: string;
 }
 
 export async function getPostsPage({
   page = 1,
   pageSize = 10,
   folderId,
-  isArchived,
-  search,
 }: GetPostsPageParams = {}): Promise<PostPage> {
   const params = new URLSearchParams({
     page: String(page),
@@ -23,12 +19,6 @@ export async function getPostsPage({
 
   if (folderId) {
     params.set("folder_id", folderId);
-  }
-  if (typeof isArchived === "boolean") {
-    params.set("is_archived", String(isArchived));
-  }
-  if (search?.trim()) {
-    params.set("search", search.trim());
   }
 
   const res = await fetch(`${siteConfig.backendDomain}/api/posts?${params.toString()}`);

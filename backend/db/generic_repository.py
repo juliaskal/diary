@@ -21,7 +21,7 @@ class GenericRepository(ABC, Generic[T]):
         raise NotImplementedError
 
     @abstractmethod
-    def get_list(self, start: int, end: int, **filter) -> list[T]:
+    def get_list(self, **filter) -> list[T]:
         raise NotImplementedError
 
     @abstractmethod

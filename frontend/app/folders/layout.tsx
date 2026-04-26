@@ -1,4 +1,4 @@
-export default function PostLayout({
+export default function FolderLayout({
   children,
 }: {
   children: React.ReactNode;
